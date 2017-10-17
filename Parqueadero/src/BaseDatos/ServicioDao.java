@@ -72,7 +72,6 @@ public class ServicioDao implements IBaseDatos<Servicio> {
                 //registro.setUbicacion(ubicacion);
 
                 listaServicios.add(new Servicio(id,ldt,ldt1,valorServicio,placa,idPropietario,ubicacion));
-        System.out.println("id " + listaServicios.get(0).getPlaca());
             }
             st.close();
 
