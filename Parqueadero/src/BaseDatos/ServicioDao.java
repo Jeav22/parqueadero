@@ -39,15 +39,12 @@ public class ServicioDao implements IBaseDatos<Servicio> {
             }
 
             while (rs.next()) {
-                //Servicio registro = new Servicio();
 
                 id = rs.getInt("id");
-                //registro.setIdServicio(id);
 
                 fechaIngreso = rs.getDate("fechaIngreso");
                 instant = Instant.ofEpochMilli(fechaIngreso.getTime());
                 ldt = LocalDateTime.ofInstant(instant, ZoneOffset.UTC);
-                //registro.setFechaIngreso(ldt);
 
                 fechaSalida = rs.getDate("fechaSalida");
                 try {
@@ -56,20 +53,14 @@ public class ServicioDao implements IBaseDatos<Servicio> {
                 } catch (Exception e) {
                     ldt1 = null;
                 }
-                //registro.setFechaSalida(ldt1);
 
                 valorServicio = rs.getDouble("valor");
-                //registro.setValorServicio(valorServicio);
 
                 placa = rs.getString("placa");
-                System.out.println("plaaaca " + placa);
-                //registro.setPlaca(placa);
 
                 idPropietario = rs.getInt("idPropietario");
-                //registro.setIdPropietario(idPropietario);
 
                 ubicacion = rs.getInt("ubicacion");
-                //registro.setUbicacion(ubicacion);
 
                 listaServicios.add(new Servicio(id,ldt,ldt1,valorServicio,placa,idPropietario,ubicacion));
             }

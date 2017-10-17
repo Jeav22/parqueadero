@@ -36,22 +36,25 @@ public class AdministradorServicio {
         List<Propietario> propietarios = mPropietario.findAll();
         List<LugarParqueo> ubicaciones = mLugarParqueo.findAll();
         double valor = 0;
-        try{
+        try {
             for (Servicio servicio : servicios) {
                 if (servicio.getPlaca().equalsIgnoreCase(placa) && servicio.getFechaSalida().equals(null)) {
                     for (Tarifa tarifa : tarifas) {
                         if (servicio.getFechaIngreso().isAfter(tarifa.getFechaInicio()) || fechaSalida.isBefore(tarifa.getFechaExpira())) {
                             long time[] = getTime(servicio.getFechaIngreso(), tarifa.getFechaExpira());
-                            System.out.println(time[0]+":"+time[1]);
-                            valor += tarifa.getValorMinuto() * (time[0]*60)+ tarifa.getValorMinuto()*(time[1]);
+                            System.out.println(time[0] + ":" + time[1]);
+                            valor += tarifa.getValorMinuto() * (time[0] * 60) + tarifa.getValorMinuto() * (time[1]);
                         }
                     }
                     for (LugarParqueo ubicacion : ubicaciones) {
-                        ubicacion.setEstadoLugarParqueo(1);
+                        if (ubicacion.getIdLugarParqueo() == servicio.getUbicacion()) {
+                            ubicacion.setEstadoLugarParqueo(1);
+                            mLugarParqueo.update(ubicacion);
+                        }
                     }
                     if (correo.equals("Anonimo")) {
                         servicio.setIdPropietario(-1);
-                    }else{
+                    } else {
                         for (Propietario propietario : propietarios) {
                             if (correo.equalsIgnoreCase(propietario.getCorreo())) {
                                 servicio.setIdPropietario(propietario.getId());
@@ -61,15 +64,15 @@ public class AdministradorServicio {
                     servicio.setFechaSalida(fechaSalida);
                     servicio.setValorServicio(valor);
 
-
                     mServicio.update(servicio);
                 }
             }
-        }catch(Exception e){
-            
+        } catch (Exception e) {
+
         }
         return valor;
     }
+
     private static long[] getTime(LocalDateTime dob, LocalDateTime now) {
         LocalDateTime today = LocalDateTime.of(now.getYear(),
                 now.getMonthValue(), now.getDayOfMonth(), dob.getHour(), dob.getMinute(), dob.getSecond());
@@ -88,7 +91,7 @@ public class AdministradorServicio {
         List<String> servicios = new ArrayList<>();
         List<Servicio> listaServicios = mServicio.findAll();
         List<Propietario> listaPropietarios = mPropietario.findAll();
-        try{
+        try {
             for (Servicio listaServicio : listaServicios) {
                 if (listaServicio.getFechaIngreso().toLocalDate().isEqual(fecha.toLocalDate()) || listaServicio.getFechaSalida().toLocalDate().isEqual(fecha.toLocalDate())) {
                     String dueño = null;
@@ -101,13 +104,13 @@ public class AdministradorServicio {
                             }
                         }
                     }
-                    String s = "Servicio: " + listaServicio.getIdServicio() + " Placa: "+listaServicio.getPlaca() +" Valor: " + listaServicio.getValorServicio() + " Ingreso: " + listaServicio.getFechaIngreso() + " Salida: " + listaServicio.getFechaSalida() + " Ubicacion: " + listaServicio.getUbicacion() + " Propietario: " + dueño + "\n";
+                    String s = "Servicio: " + listaServicio.getIdServicio() + " Placa: " + listaServicio.getPlaca() + " Valor: " + listaServicio.getValorServicio() + " Ingreso: " + listaServicio.getFechaIngreso() + " Salida: " + listaServicio.getFechaSalida() + " Ubicacion: " + listaServicio.getUbicacion() + " Propietario: " + dueño + "\n";
                     servicios.add(s);
                 }
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             if (servicios.isEmpty()) {
-                servicios.add("No se encontraron resultados para "+fecha);
+                servicios.add("No se encontraron resultados para " + fecha);
             }
         }
         return servicios;
@@ -117,7 +120,7 @@ public class AdministradorServicio {
         String servicio = null;
         List<Servicio> listaServicios = mServicio.findAll();
         List<Propietario> listaPropietarios = mPropietario.findAll();
-        
+
         for (Servicio listaServicio : listaServicios) {
             if (listaServicio.getIdServicio() == id) {
                 String dueño = null;
@@ -139,13 +142,13 @@ public class AdministradorServicio {
     public String obtenerLugarParqueo(String placa) {
         String respuesta = null;
         List<Servicio> listaServicios = mServicio.findAll();
-        
+
         for (Servicio listaServicio : listaServicios) {
-            if(listaServicio.getPlaca().equalsIgnoreCase(placa) && listaServicio.getValorServicio() == 0.0){
-                respuesta = "El vehiculo con placa "+placa+" se encuentra en "+listaServicio.getUbicacion();
+            if (listaServicio.getPlaca().equalsIgnoreCase(placa) && listaServicio.getValorServicio() == 0.0) {
+                respuesta = "El vehiculo con placa " + placa + " se encuentra en " + listaServicio.getUbicacion();
             }
         }
-        
+
         return respuesta;
     }
 }
