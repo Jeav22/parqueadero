@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS Servicio(
 	id integer auto_increment not null,
 	fechaIngreso date not null,
 	horaIngreso time not null,
-	fechaSalida datetime,
+	fechaSalida date,
 	horaSalida time,
 	valor double,
 	placa varchar(6) not null,

@@ -45,15 +45,16 @@ public class AdministradorServicio {
                     servicio.setHoraSalida(horaSalida);
                     servicio.setValorServicio(valor);
 
-                    mServicio.update(servicio);
-                    
-                            for (Tarifa tarifa : tarifas) {
+                    for (Tarifa tarifa : tarifas) {
                         if (servicio.getFechaIngreso().isAfter(tarifa.getFechaInicio()) && fechaSalida.isBefore(tarifa.getFechaExpira())) {
-                            minutos = (horaSalida.getHour()-servicio.getHoraIngreso().getHour())*60;
+                            minutos = (horaSalida.getHour()-servicio.getHoraIngreso().getHour())*60 + horaSalida.getMinute()-servicio.getHoraIngreso().getMinute();
                             System.out.println("Minutos "+minutos);
                             valor += minutos*tarifa.getValorMinuto();
                         }
                     }
+
+                    mServicio.update(servicio);
+
                     for (LugarParqueo ubicacion : ubicaciones) {
                         if (ubicacion.getIdLugarParqueo() == servicio.getUbicacion()) {
                             ubicacion.setEstadoLugarParqueo(1);
