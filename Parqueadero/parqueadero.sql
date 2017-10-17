@@ -48,7 +48,6 @@ CREATE TABLE IF NOT EXISTS Servicio(
 	ubicacion integer not null,
 
 	PRIMARY KEY(id),
-	FOREIGN KEY(idPropietario) REFERENCES Propietario(id),
 	FOREIGN KEY(ubicacion) REFERENCES LugarParqueo(id)
 );
 
