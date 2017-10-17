@@ -18,8 +18,8 @@ public class ControladorServicio {
         return adminServicio.CrearServicio(fechaIngreso, horaIngreso, placa, ubicacion);
     }
     
-    public double liquidarServicio(LocalDate fechaSalida, String placa, String correo){
-        return adminServicio.liquidarServicio(fechaSalida, placa, correo);
+    public double liquidarServicio(LocalDate fechaSalida, LocalTime horaSalida, String placa, String correo){
+        return adminServicio.liquidarServicio(fechaSalida, horaSalida, placa, correo);
     }
     
     public List<String> listarServicios(LocalDate fecha){

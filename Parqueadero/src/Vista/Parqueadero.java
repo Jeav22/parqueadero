@@ -181,7 +181,7 @@ public class Parqueadero {
     }
 
     public static double retirarVehiculo(String placa, String correo) {
-        return ctrServicio.liquidarServicio(LocalDate.now(), placa, correo);
+        return ctrServicio.liquidarServicio(LocalDate.now(), LocalTime.now(), placa, correo);
     }
 
     public static boolean registrarPropietario(String nombre, String correo) {

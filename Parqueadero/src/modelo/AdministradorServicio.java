@@ -2,7 +2,6 @@ package modelo;
 
 import BaseDatos.IBaseDatos;
 import BaseDatos.ServicioDao;
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -32,7 +31,7 @@ public class AdministradorServicio {
         return mServicio.insert(s);
     }
 
-    public double liquidarServicio(LocalDate fechaSalida, String placa, String correo) {
+    public double liquidarServicio(LocalDate fechaSalida, LocalTime horaSalida, String placa, String correo) {
         List<Tarifa> tarifas = mTarifa.findAll();
         List<Servicio> servicios = mServicio.findAll();
         List<Propietario> propietarios = mPropietario.findAll();
@@ -40,12 +39,19 @@ public class AdministradorServicio {
         double valor = 0;
         try {
             for (Servicio servicio : servicios) {
-                if (servicio.getPlaca().equalsIgnoreCase(placa) && servicio.getFechaSalida().equals(null)) {
-                    for (Tarifa tarifa : tarifas) {
-                        if (servicio.getFechaIngreso().isAfter(tarifa.getFechaInicio()) || fechaSalida.isBefore(tarifa.getFechaExpira())) {
-                            //long time[] = getTime(servicio.getFechaIngreso(), tarifa.getFechaExpira());
-                            //System.out.println(time[0] + ":" + time[1]);
-                            //valor += tarifa.getValorMinuto() * (time[0] * 60) + tarifa.getValorMinuto() * (time[1]);
+                if (servicio.getPlaca().equalsIgnoreCase(placa) && servicio.getFechaSalida()== null) {
+                    int minutos=0;
+                    servicio.setFechaSalida(fechaSalida);
+                    servicio.setHoraSalida(horaSalida);
+                    servicio.setValorServicio(valor);
+
+                    mServicio.update(servicio);
+                    
+                            for (Tarifa tarifa : tarifas) {
+                        if (servicio.getFechaIngreso().isAfter(tarifa.getFechaInicio()) && fechaSalida.isBefore(tarifa.getFechaExpira())) {
+                            minutos = (horaSalida.getHour()-servicio.getHoraIngreso().getHour())*60;
+                            System.out.println("Minutos "+minutos);
+                            valor += minutos*tarifa.getValorMinuto();
                         }
                     }
                     for (LugarParqueo ubicacion : ubicaciones) {
@@ -63,10 +69,6 @@ public class AdministradorServicio {
                             }
                         }
                     }
-                    servicio.setFechaSalida(fechaSalida);
-                    servicio.setValorServicio(valor);
-
-                    mServicio.update(servicio);
                 }
             }
         } catch (Exception e) {
