@@ -97,10 +97,10 @@ public class Parqueadero {
                     if (subMenu.equalsIgnoreCase("y")) {
                         System.out.print("\nDigite el nombre del propietario: ");
                         nombre = sc.next();
-                        System.out.print("\nDigite un correo electronico");
+                        System.out.print("\nDigite un correo electronico: ");
                         correo = sc.next();
                         transaccion = registrarPropietario(nombre, correo);
-                        if (transaccion) {
+                        if (!transaccion) {
                             System.out.println("El Propietario se registro exitosamente!\n");
                         }else{
                             System.out.println("No se pudo registrar el propietario\n");
