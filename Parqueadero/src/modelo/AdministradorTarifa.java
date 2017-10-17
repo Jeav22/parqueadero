@@ -1,7 +1,8 @@
 package modelo;
 
 import BaseDatos.IBaseDatos;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,10 +14,12 @@ public class AdministradorTarifa {
         this.mTarifa = mTarifa;
     }
     
-    public boolean crearTarifa(LocalDateTime inicio, LocalDateTime expira, int valor, String tipo){
+    public boolean crearTarifa(LocalDate inicio, LocalTime hInicio, LocalDate expira, LocalTime hExpira, int valor, String tipo){
         Tarifa t = new Tarifa();
         t.setFechaInicio(inicio);
+        t.setHoraInicio(hInicio);
         t.setFechaExpira(expira);
+        t.setHoraExpira(hExpira);
         t.setValorMinuto(valor);
         t.setTipoTarifa(tipo);
         mTarifa.insert(t);

@@ -1,13 +1,16 @@
 package modelo;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class Tarifa {
     
     private int idTarifa;
     private int valorMinuto;
-    private LocalDateTime fechaInicio;
-    private LocalDateTime fechaExpira;
+    private LocalDate fechaInicio;
+    private LocalTime horaInicio;
+    private LocalDate fechaExpira;
+    private LocalTime horaExpira;
     private String tipoTarifa;
 
     public int getIdTarifa() {
@@ -26,20 +29,36 @@ public class Tarifa {
         this.valorMinuto = valorMinuto;
     }
 
-    public LocalDateTime getFechaInicio() {
+    public LocalDate getFechaInicio() {
         return fechaInicio;
     }
 
-    public void setFechaInicio(LocalDateTime fechaInicio) {
+    public void setFechaInicio(LocalDate fechaInicio) {
         this.fechaInicio = fechaInicio;
     }
 
-    public LocalDateTime getFechaExpira() {
+    public LocalTime getHoraInicio() {
+        return horaInicio;
+    }
+
+    public void setHoraInicio(LocalTime horaInicio) {
+        this.horaInicio = horaInicio;
+    }
+
+    public LocalDate getFechaExpira() {
         return fechaExpira;
     }
 
-    public void setFechaExpira(LocalDateTime fechaExpira) {
+    public void setFechaExpira(LocalDate fechaExpira) {
         this.fechaExpira = fechaExpira;
+    }
+
+    public LocalTime getHoraExpira() {
+        return horaExpira;
+    }
+
+    public void setHoraExpira(LocalTime horaExpira) {
+        this.horaExpira = horaExpira;
     }
 
     public String getTipoTarifa() {

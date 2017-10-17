@@ -60,12 +60,16 @@ public class Parqueadero {
             String subMenu = null;
             String sfecha = null;
             String sfecha2 = null;
+            String shora = null;
+            String shora2 = null;
             int ubicacion = 0;
             int valorMinuto = -1;
             boolean transaccion;
             DateTimeFormatter f = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-            LocalDateTime fecha = null;
-            LocalDateTime fecha2 = null;
+            LocalDate fecha = null;
+            LocalTime hora = null;
+            LocalDate fecha2 = null;
+            LocalTime hora2 = null;
 
             switch (opcion) {
                 
@@ -121,26 +125,31 @@ public class Parqueadero {
                     break;
                 
                 case 5:
-                    System.out.print("Ingrese una Fecha: p.e("+LocalDateTime.now()+", yyyy-MM-dd) ");
+                    System.out.print("Ingrese una Fecha: p.e("+LocalDate.now()+", yyyy-MM-dd) ");
                     sfecha = sc.next();
                     LocalDate ld = LocalDate.parse(sfecha);
-                    fecha = LocalDateTime.of(ld, LocalTime.MIN);
-                    System.out.println("\n"+obtenerRegistrosFecha(fecha));
+                    System.out.println("\n"+obtenerRegistrosFecha(ld));
                     System.out.println(".-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.");
                     break;
                 
                 case 6:
-                    System.out.print("Ingrese una fehca de inicio para la tarifa p.e (yyyy-MM-dd HH:mm:ss) ");
+                    System.out.print("Ingrese una fecha de inicio para la tarifa p.e (yyyy-MM-dd) ");
                     sfecha= sc.next();
-                    fecha = LocalDateTime.from(f.parse(sfecha));
-                    System.out.print("\nIngrese una fehca de expiracion para la tarifa p.e (yyyy-MM-dd HH:mm:ss)");
+                    fecha = LocalDate.parse(sfecha);
+                    System.out.print("Ingrese una hora de inicio para la tarifa p.e (HH:mm:ss) ");
+                    shora= sc.next();
+                    hora = LocalTime.parse(shora);
+                    System.out.print("\nIngrese una fecha de expiracion para la tarifa p.e (yyyy-MM-dd)");
                     sfecha2= sc.next();
-                    fecha2 = LocalDateTime.from(f.parse(sfecha2));
+                    fecha2 = LocalDate.parse(sfecha2);
+                    System.out.print("Ingrese una hora de expiracion para la tarifa p.e (HH:mm:ss) ");
+                    shora2= sc.next();
+                    hora2 = LocalTime.parse(shora2);
                     System.out.print("\nDigite el valor por minuto de la tarifa: $");
                     valorMinuto = sc.nextInt();
                     System.out.print("\nIngrese el tipo de tarifa a crear: ");
                     descripcion = sc.next();
-                    transaccion = crearTarifa(fecha, fecha2, valorMinuto, descripcion);
+                    transaccion = crearTarifa(fecha, hora2, fecha, hora, opcion, correo);
                     if (transaccion) {
                         System.out.println("La tarifa se registro exitosamente!\n");
                     }else{
@@ -159,7 +168,7 @@ public class Parqueadero {
 
     public static boolean ingresarVehiculo(int idLugarParqueo, String placa, String descripcion) {       
         boolean transaccion;
-        boolean servicio=ctrServicio.CrearServicio(LocalDateTime.now(), placa, idLugarParqueo);
+        boolean servicio=ctrServicio.CrearServicio(LocalDate.now(), LocalTime.now(), placa, idLugarParqueo);
         boolean estadoLP =ctrLugarParqueo.actualizarEstadoLugarParqueo(idLugarParqueo, 2);
         boolean registroV = ctrVehiculo.registrarVehiculo(placa, descripcion);
         if (servicio && estadoLP && registroV) {
@@ -172,7 +181,7 @@ public class Parqueadero {
     }
 
     public static double retirarVehiculo(String placa, String correo) {
-        return ctrServicio.liquidarServicio(LocalDateTime.now(), placa, correo);
+        return ctrServicio.liquidarServicio(LocalDate.now(), placa, correo);
     }
 
     public static boolean registrarPropietario(String nombre, String correo) {
@@ -187,15 +196,15 @@ public class Parqueadero {
         return ctrPropietario.obtenerDatosPropietario(correo);
     }
 
-    public static String obtenerRegistrosFecha(LocalDateTime fehca) {
-        return ctrServicio.listarServicios(fehca).toString();
+    public static String obtenerRegistrosFecha(LocalDate fecha) {
+        return ctrServicio.listarServicios(fecha).toString();
     }
 
     public static String obtenerRegistrosVehiculo(String placa) {
         return ctrVehiculo.obtenerDatosVehiculo(placa);
     }
 
-    public static boolean crearTarifa(LocalDateTime inicio, LocalDateTime expira, int valor, String tipo) {
-        return ctrTarifa.crearTarifa(inicio, expira, valor, tipo);
+    public static boolean crearTarifa(LocalDate inicio, LocalTime hInicio, LocalDate expira, LocalTime hExpira, int valor, String tipo) {
+        return ctrTarifa.crearTarifa(inicio, hInicio, expira, hExpira, valor, tipo);
     }
 }

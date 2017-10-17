@@ -1,7 +1,8 @@
 package controlador;
 
 import BaseDatos.IBaseDatos;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import modelo.AdministradorServicio;
 
@@ -13,15 +14,15 @@ public class ControladorServicio {
         adminServicio = new AdministradorServicio(mServicio, mTarifa, mPropietario, mLugarParqueo);
     }
     
-    public boolean CrearServicio(LocalDateTime fechaIngreso, String placa, int ubicacion){
-        return adminServicio.CrearServicio(fechaIngreso, placa, ubicacion);
+    public boolean CrearServicio(LocalDate fechaIngreso, LocalTime horaIngreso, String placa, int ubicacion){
+        return adminServicio.CrearServicio(fechaIngreso, horaIngreso, placa, ubicacion);
     }
     
-    public double liquidarServicio(LocalDateTime fechaSalida, String placa, String correo){
+    public double liquidarServicio(LocalDate fechaSalida, String placa, String correo){
         return adminServicio.liquidarServicio(fechaSalida, placa, correo);
     }
     
-    public List<String> listarServicios(LocalDateTime fecha){
+    public List<String> listarServicios(LocalDate fecha){
         return adminServicio.listarServicios(fecha);
     }
     

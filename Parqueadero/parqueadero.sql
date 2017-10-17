@@ -3,8 +3,10 @@ USE parqueadero;
 
 CREATE TABLE IF NOT EXISTS Tarifa(
 	id integer auto_increment not null,
-	fechaInicio datetime not null,
-	fechaExpira datetime not null,
+	fechaInicio date not null,
+	horaInicio time not null,
+	fechaExpira date not null,
+	horaExpira time not null, 
 	valorMinuto double not null,
 
 	PRIMARY KEY(id)
@@ -36,8 +38,10 @@ CREATE TABLE IF NOT EXISTS LugarParqueo(
 
 CREATE TABLE IF NOT EXISTS Servicio(
 	id integer auto_increment not null,
-	fechaIngreso datetime not null,
+	fechaIngreso date not null,
+	horaIngreso time not null,
 	fechaSalida datetime,
+	horaSalida time,
 	valor double,
 	placa varchar(6) not null,
 	idPropietario integer,
@@ -48,7 +52,7 @@ CREATE TABLE IF NOT EXISTS Servicio(
 	FOREIGN KEY(ubicacion) REFERENCES LugarParqueo(id)
 );
 
-INSERT INTO Tarifa(fechaInicio, fechaExpira, valorMinuto) VALUES ('2017-01-01 00:00:00', '2017-12-31 22:04:30', 60);
+INSERT INTO Tarifa(fechaInicio,horaInicio, fechaExpira, horaExpira,valorMinuto) VALUES ('2017-01-01','00:00:00', '2017-12-31','22:04:30', 60);
 
 # estados = 3 (1= disponible, 2=ocupado, 3=fueraDeServicio)
 

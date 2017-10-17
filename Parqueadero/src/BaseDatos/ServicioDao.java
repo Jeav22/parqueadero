@@ -2,12 +2,13 @@ package BaseDatos;
 
 import java.sql.Connection;
 import java.sql.Date;
+import java.sql.Time;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.Instant;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.time.ZoneOffset;
 import java.util.List;
@@ -25,14 +26,17 @@ public class ServicioDao implements IBaseDatos<Servicio> {
             ResultSet rs = st.executeQuery(query);
             int id = 0;
             Date fechaIngreso = null;
+            Time horaIngreso = null;
             Date fechaSalida = null;
+            Time horaSalida = null;
             double valorServicio = 0;
             String placa = null;
             int idPropietario = -1;
             int ubicacion = -1;
-            Instant instant;
-            LocalDateTime ldt;
-            LocalDateTime ldt1;
+            LocalDate ldt;
+            LocalTime lt;
+            LocalDate ldt1;
+            LocalTime lt1;
 
             if (listaServicios == null) {
                 listaServicios = new ArrayList<>();
@@ -43,17 +47,25 @@ public class ServicioDao implements IBaseDatos<Servicio> {
                 id = rs.getInt("id");
 
                 fechaIngreso = rs.getDate("fechaIngreso");
-                instant = Instant.ofEpochMilli(fechaIngreso.getTime());
-                ldt = LocalDateTime.ofInstant(instant, ZoneOffset.UTC);
-
+                ldt = LocalDate.parse(fechaIngreso.toString());
+                
+                horaIngreso = rs.getTime("horaIngreso");
+                lt = LocalTime.parse(horaIngreso.toString());
+                
                 fechaSalida = rs.getDate("fechaSalida");
                 try {
-                    instant = Instant.ofEpochMilli(fechaSalida.getTime());
-                    ldt1 = LocalDateTime.ofInstant(instant, ZoneOffset.UTC);
+                    ldt1 = LocalDate.parse(fechaSalida.toString());
                 } catch (Exception e) {
                     ldt1 = null;
                 }
-
+                
+                horaSalida = rs.getTime("horaSalida");
+                try{
+                    lt1 = LocalTime.parse(horaSalida.toString());
+                }catch(Exception e){
+                    lt1 = null;
+                }
+                
                 valorServicio = rs.getDouble("valor");
 
                 placa = rs.getString("placa");
@@ -62,7 +74,7 @@ public class ServicioDao implements IBaseDatos<Servicio> {
 
                 ubicacion = rs.getInt("ubicacion");
 
-                listaServicios.add(new Servicio(id,ldt,ldt1,valorServicio,placa,idPropietario,ubicacion));
+                listaServicios.add(new Servicio(id,ldt,lt,ldt1,lt1,valorServicio,placa,idPropietario,ubicacion));
             }
             st.close();
 
@@ -77,17 +89,17 @@ public class ServicioDao implements IBaseDatos<Servicio> {
     public boolean insert(Servicio t) {
         boolean result = true;
         Connection connection = Conexion.getConnection();
-        String query = " insert into Servicio (fechaIngreso, valor, placa, idPropietario, ubicacion)" + " values ( ?, ?, ?, ?, ?)";
+        String query = " insert into Servicio (fechaIngreso, horaIngreso, valor, placa, idPropietario, ubicacion)" + " values ( ?, ?, ?, ?, ?, ?)";
         PreparedStatement preparedStmt = null;
 
         try {
             preparedStmt = connection.prepareStatement(query);
-            Instant instant = t.getFechaIngreso().toInstant(ZoneOffset.UTC);
-            preparedStmt.setDate(1, Date.valueOf(t.getFechaIngreso().toLocalDate()));
-            preparedStmt.setDouble(2, t.getValorServicio());
-            preparedStmt.setString(3, t.getPlaca());
-            preparedStmt.setInt(4, t.getIdPropietario());
-            preparedStmt.setInt(5, t.getUbicacion());
+            preparedStmt.setDate(1, Date.valueOf(t.getFechaIngreso().toString()));
+            preparedStmt.setTime(2, Time.valueOf(t.getHoraIngreso()));
+            preparedStmt.setDouble(3, t.getValorServicio());
+            preparedStmt.setString(4, t.getPlaca());
+            preparedStmt.setInt(5, t.getIdPropietario());
+            preparedStmt.setInt(6, t.getUbicacion());
             result = preparedStmt.execute();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -99,19 +111,19 @@ public class ServicioDao implements IBaseDatos<Servicio> {
     public boolean update(Servicio t) {
         boolean result = true;
         Connection connection = Conexion.getConnection();
-        String query = "update Servicio set fechaIngreso = ?, fechaSalida = ? , valor=?, placa = ?, idPropietario = ?, ubicacion = ? where id = ?";
+        String query = "update Servicio set fechaIngreso = ?, horaIngreso = ?, fechaSalida = ?, horaSalida = ?, valor=?, placa = ?, idPropietario = ?, ubicacion = ? where id = ?";
         PreparedStatement preparedStmt = null;
         try {
             preparedStmt = connection.prepareStatement(query);
-            Instant instant = t.getFechaIngreso().toInstant(ZoneOffset.UTC);
-            preparedStmt.setDate(1, (Date) Date.from(instant));
-            instant = t.getFechaSalida().toInstant(ZoneOffset.UTC);
-            preparedStmt.setDate(2, (Date) Date.from(instant));
-            preparedStmt.setDouble(3, t.getValorServicio());
-            preparedStmt.setString(4, t.getPlaca());
-            preparedStmt.setInt(5, t.getIdPropietario());
-            preparedStmt.setInt(6, t.getUbicacion());
-            preparedStmt.setInt(7, t.getIdServicio());
+            preparedStmt.setDate(1, Date.valueOf(t.getFechaIngreso()));
+            preparedStmt.setTime(2, Time.valueOf(t.getHoraIngreso()));
+            preparedStmt.setDate(3, Date.valueOf(t.getFechaSalida()));
+            preparedStmt.setTime(4, Time.valueOf(t.getHoraSalida()));
+            preparedStmt.setDouble(5, t.getValorServicio());
+            preparedStmt.setString(6, t.getPlaca());
+            preparedStmt.setInt(7, t.getIdPropietario());
+            preparedStmt.setInt(8, t.getUbicacion());
+            preparedStmt.setInt(9, t.getIdServicio());
             if (preparedStmt.executeUpdate() > 0) {
                 result = true;
             }

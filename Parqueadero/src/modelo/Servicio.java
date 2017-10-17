@@ -1,31 +1,35 @@
 
 package modelo;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class Servicio {
     
     private int idServicio;
-    private LocalDateTime fechaIngreso;
-    private LocalDateTime fechaSalida;
+    private LocalDate fechaIngreso;
+    private LocalTime horaIngreso;
+    private LocalDate fechaSalida;
+    private LocalTime horaSalida;
     private double valorServicio;
     private String placa;
     private int idPropietario;
     private int ubicacion;
     
-  
-    public Servicio(int id, LocalDateTime ldt, LocalDateTime ldt1, double valorServicio, String placa, int idPropietario, int ubicacion) {
+    public Servicio() {
+
+    }
+
+    public Servicio(int id, LocalDate ldt,LocalTime lt, LocalDate ldt1, LocalTime lt1, double valorServicio, String placa, int idPropietario, int ubicacion) {
         this.idServicio = id;
         this.fechaIngreso = ldt;
+        this.horaIngreso = lt;
         this.fechaSalida = ldt1;
+        this.horaSalida = lt1;
         this.valorServicio = valorServicio;
         this.placa = placa;
         this.idPropietario = idPropietario;
         this.ubicacion = ubicacion;
-    }
-
-    public Servicio() {
-
     }
 
     public int getIdServicio() {
@@ -36,20 +40,36 @@ public class Servicio {
         this.idServicio = idServicio;
     }
 
-    public LocalDateTime getFechaIngreso() {
+    public LocalDate getFechaIngreso() {
         return fechaIngreso;
     }
 
-    public void setFechaIngreso(LocalDateTime fechaIngreso) {
+    public void setFechaIngreso(LocalDate fechaIngreso) {
         this.fechaIngreso = fechaIngreso;
     }
 
-    public LocalDateTime getFechaSalida() {
+    public LocalTime getHoraIngreso() {
+        return horaIngreso;
+    }
+
+    public void setHoraIngreso(LocalTime horaIngreso) {
+        this.horaIngreso = horaIngreso;
+    }
+
+    public LocalDate getFechaSalida() {
         return fechaSalida;
     }
 
-    public void setFechaSalida(LocalDateTime fechaSalida) {
+    public void setFechaSalida(LocalDate fechaSalida) {
         this.fechaSalida = fechaSalida;
+    }
+
+    public LocalTime getHoraSalida() {
+        return horaSalida;
+    }
+
+    public void setHoraSalida(LocalTime horaSalida) {
+        this.horaSalida = horaSalida;
     }
 
     public double getValorServicio() {

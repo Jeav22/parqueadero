@@ -3,7 +3,8 @@ package modelo;
 import BaseDatos.IBaseDatos;
 import BaseDatos.ServicioDao;
 import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,16 +22,17 @@ public class AdministradorServicio {
         this.mLugarParqueo = mLugarParqueo;
     }
 
-    public boolean CrearServicio(LocalDateTime fechaIngreso, String placa, int ubicacion) {
+    public boolean CrearServicio(LocalDate fechaIngreso, LocalTime horaIngreso, String placa, int ubicacion) {
         Servicio s = new Servicio();
         s.setFechaIngreso(fechaIngreso);
+        s.setHoraIngreso(horaIngreso);
         s.setPlaca(placa);
         s.setUbicacion(ubicacion);
         s.setIdPropietario(-1);
         return mServicio.insert(s);
     }
 
-    public double liquidarServicio(LocalDateTime fechaSalida, String placa, String correo) {
+    public double liquidarServicio(LocalDate fechaSalida, String placa, String correo) {
         List<Tarifa> tarifas = mTarifa.findAll();
         List<Servicio> servicios = mServicio.findAll();
         List<Propietario> propietarios = mPropietario.findAll();
@@ -41,9 +43,9 @@ public class AdministradorServicio {
                 if (servicio.getPlaca().equalsIgnoreCase(placa) && servicio.getFechaSalida().equals(null)) {
                     for (Tarifa tarifa : tarifas) {
                         if (servicio.getFechaIngreso().isAfter(tarifa.getFechaInicio()) || fechaSalida.isBefore(tarifa.getFechaExpira())) {
-                            long time[] = getTime(servicio.getFechaIngreso(), tarifa.getFechaExpira());
-                            System.out.println(time[0] + ":" + time[1]);
-                            valor += tarifa.getValorMinuto() * (time[0] * 60) + tarifa.getValorMinuto() * (time[1]);
+                            //long time[] = getTime(servicio.getFechaIngreso(), tarifa.getFechaExpira());
+                            //System.out.println(time[0] + ":" + time[1]);
+                            //valor += tarifa.getValorMinuto() * (time[0] * 60) + tarifa.getValorMinuto() * (time[1]);
                         }
                     }
                     for (LugarParqueo ubicacion : ubicaciones) {
@@ -73,27 +75,13 @@ public class AdministradorServicio {
         return valor;
     }
 
-    private static long[] getTime(LocalDateTime dob, LocalDateTime now) {
-        LocalDateTime today = LocalDateTime.of(now.getYear(),
-                now.getMonthValue(), now.getDayOfMonth(), dob.getHour(), dob.getMinute(), dob.getSecond());
-        Duration duration = Duration.between(today, now);
-
-        long seconds = duration.getSeconds();
-
-        long hours = seconds / 3600;
-        long minutes = ((seconds % 3600) / 60);
-        long secs = (seconds % 60);
-
-        return new long[]{hours, minutes, secs};
-    }
-
-    public List<String> listarServicios(LocalDateTime fecha) {
+    public List<String> listarServicios(LocalDate fecha) {
         List<String> servicios = new ArrayList<>();
         List<Servicio> listaServicios = mServicio.findAll();
         List<Propietario> listaPropietarios = mPropietario.findAll();
         try {
             for (Servicio listaServicio : listaServicios) {
-                if (listaServicio.getFechaIngreso().toLocalDate().isEqual(fecha.toLocalDate()) || listaServicio.getFechaSalida().toLocalDate().isEqual(fecha.toLocalDate())) {
+                if (listaServicio.getFechaIngreso().isEqual(fecha) || listaServicio.getFechaSalida().isEqual(fecha)) {
                     String dueño = null;
                     if (listaServicio.getIdPropietario() == -1) {
                         dueño = "Anonimo";
@@ -104,7 +92,7 @@ public class AdministradorServicio {
                             }
                         }
                     }
-                    String s = "Servicio: " + listaServicio.getIdServicio() + " Placa: " + listaServicio.getPlaca() + " Valor: " + listaServicio.getValorServicio() + " Ingreso: " + listaServicio.getFechaIngreso() + " Salida: " + listaServicio.getFechaSalida() + " Ubicacion: " + listaServicio.getUbicacion() + " Propietario: " + dueño + "\n";
+                    String s = "Servicio: " + listaServicio.getIdServicio() + " Placa: " + listaServicio.getPlaca() + " Valor: " + listaServicio.getValorServicio() + " Ingreso: " + listaServicio.getFechaIngreso()+" "+listaServicio.getHoraIngreso()+" Salida: " + listaServicio.getFechaSalida()+" "+listaServicio.getHoraSalida()+" Ubicacion: " + listaServicio.getUbicacion() + " Propietario: " + dueño + "\n";
                     servicios.add(s);
                 }
             }

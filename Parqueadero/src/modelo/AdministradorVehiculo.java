@@ -62,7 +62,7 @@ public class AdministradorVehiculo {
                                 
                             }
                         }
-                        servicios += "Servicio: "+listaServicio.getIdServicio()+" Valor: "+listaServicio.getValorServicio()+" Ingreso: "+listaServicio.getFechaIngreso()+" Salida: "+listaServicio.getFechaSalida()+" Ubicacion: "+listaServicio.getUbicacion()+" Propietario: "+dueño+"\n";
+                        servicios += "Servicio: "+listaServicio.getIdServicio()+" Valor: "+listaServicio.getValorServicio()+" Ingreso: "+listaServicio.getFechaIngreso()+" "+listaServicio.getHoraIngreso()+" Salida: "+listaServicio.getFechaSalida()+" "+listaServicio.getHoraSalida()+" Ubicacion: "+listaServicio.getUbicacion()+" Propietario: "+dueño+"\n";
                     }
                 }
                 return vehiculo+servicios;

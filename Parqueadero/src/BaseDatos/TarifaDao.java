@@ -6,8 +6,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Time;
 import java.time.Instant;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,9 +28,10 @@ public class TarifaDao implements IBaseDatos<Tarifa>{
             int id = 0;
             Date fechaInicio = null;
             Date fechaExpira = null;
+            Time horaInicio = null;
+            Time horaExpira = null;
             int valorMinuto = 0;
-            Instant instant;
-            LocalDateTime ldt;
+            LocalDate ldt;
 
             while (rs.next()) {
                 if (tarifas == null) {
@@ -40,16 +43,18 @@ public class TarifaDao implements IBaseDatos<Tarifa>{
                 registro.setIdTarifa(id);
 
                 fechaInicio = rs.getDate("fechaInicio");
-                instant = Instant.ofEpochMilli(fechaInicio.getTime());
-                ldt = LocalDateTime.ofInstant(instant, ZoneOffset.UTC);
+                ldt = LocalDate.parse(fechaInicio.toString());
                 registro.setFechaInicio(ldt);
-
+                
+                horaInicio = rs.getTime("horaInicio");
+                registro.setHoraInicio(LocalTime.parse(horaInicio.toString()));
 
                 fechaExpira = rs.getDate("fechaExpira");
-                instant = Instant.ofEpochMilli(fechaExpira.getTime());
-                ldt = LocalDateTime.ofInstant(instant, ZoneOffset.UTC);
+                ldt = LocalDate.parse(fechaExpira.toString());
                 registro.setFechaExpira(ldt);
-
+                
+                horaExpira = rs.getTime("horaExpira");
+                registro.setHoraExpira(LocalTime.parse(horaExpira.toString()));
 
                 valorMinuto = rs.getInt("valorMinuto");
                 registro.setValorMinuto(valorMinuto);
@@ -70,16 +75,16 @@ public class TarifaDao implements IBaseDatos<Tarifa>{
     public boolean insert(Tarifa t) {
         boolean result = false;
         Connection connection = Conexion.getConnection();
-        String query = " insert into Tarifa (valorMinuto, fechaInicio, fechaExpira)" + " values (?, ?, ?)";
+        String query = " insert into Tarifa (valorMinuto, fechaInicio, horaInicio, fechaExpira, horaExpira)" + " values (?, ?, ?, ?, ?)";
         PreparedStatement preparedStmt = null;
 
         try {
             preparedStmt = connection.prepareStatement(query);
             preparedStmt.setInt(1, t.getValorMinuto());
-            Instant instant = t.getFechaInicio().toInstant(ZoneOffset.UTC);
-            preparedStmt.setDate(2, (Date) Date.from(instant));
-            instant = t.getFechaExpira().toInstant(ZoneOffset.UTC);
-            preparedStmt.setDate(3, (Date) Date.from(instant));
+            preparedStmt.setDate(2, Date.valueOf(t.getFechaInicio()));
+            preparedStmt.setTime(3, Time.valueOf(t.getHoraInicio()));
+            preparedStmt.setDate(4, Date.valueOf(t.getFechaExpira()));
+            preparedStmt.setTime(5, Time.valueOf(t.getHoraExpira()));
             result = preparedStmt.execute();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -91,16 +96,16 @@ public class TarifaDao implements IBaseDatos<Tarifa>{
     public boolean update(Tarifa t) {
         boolean result = false;
         Connection connection = Conexion.getConnection();
-        String query = "update Tarifa set valorMinuto = ?, fechaInicio = ?, fechaExpira=? where id = ?";
+        String query = "update Tarifa set valorMinuto = ?, fechaInicio = ?, horaInico = ?, fechaExpira=?, horaExpira = ? where id = ?";
         PreparedStatement preparedStmt = null;
         try {
             preparedStmt = connection.prepareStatement(query);
             preparedStmt.setInt(1, t.getValorMinuto());
-            Instant instant = t.getFechaInicio().toInstant(ZoneOffset.UTC);
-            preparedStmt.setDate(2, (Date) Date.from(instant));
-            instant = t.getFechaExpira().toInstant(ZoneOffset.UTC);
-            preparedStmt.setDate(3, (Date) Date.from(instant));
-            preparedStmt.setInt(4, t.getIdTarifa());
+            preparedStmt.setDate(2, Date.valueOf(t.getFechaInicio()));
+            preparedStmt.setTime(3, Time.valueOf(t.getHoraInicio()));
+            preparedStmt.setDate(4, Date.valueOf(t.getFechaExpira()));
+            preparedStmt.setTime(5, Time.valueOf(t.getHoraExpira()));
+            preparedStmt.setInt(6, t.getIdTarifa());
             if (preparedStmt.executeUpdate() > 0) {
                 result = true;
             }
