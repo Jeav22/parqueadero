@@ -47,7 +47,15 @@ public class AdministradorServicio {
                     for (Tarifa tarifa : tarifas) {
                         if (servicio.getFechaIngreso().isAfter(tarifa.getFechaInicio()) && fechaSalida.isBefore(tarifa.getFechaExpira())) {
                             minutos = (horaSalida.getHour() - servicio.getHoraIngreso().getHour()) * 60 + horaSalida.getMinute() - servicio.getHoraIngreso().getMinute();
-                            System.out.println("Minutos " + minutos);
+                            System.out.println("Minutos " + minutos+ " Tarifa $"+tarifa.getValorMinuto());
+                            valor += minutos * tarifa.getValorMinuto();
+                        }else if(servicio.getHoraIngreso().isAfter(tarifa.getHoraInicio()) && horaSalida.isAfter(tarifa.getHoraExpira())){
+                            minutos = (tarifa.getHoraExpira().getHour()-servicio.getHoraIngreso().getHour()) * 60 + tarifa.getHoraExpira().getMinute() - servicio.getHoraIngreso().getMinute();
+                            System.out.println(" Minutos " + minutos+ " Tarifa $"+tarifa.getValorMinuto());
+                            valor += minutos * tarifa.getValorMinuto();
+                        }else if(servicio.getHoraIngreso().isBefore(tarifa.getHoraInicio()) && horaSalida.isBefore(tarifa.getHoraExpira())){
+                            minutos = (horaSalida.getHour()-tarifa.getHoraInicio().getHour()) * 60 + horaSalida.getMinute()-tarifa.getHoraInicio().getMinute() ;
+                            System.out.println(".Minutos " + minutos+ " Tarifa $"+tarifa.getValorMinuto());
                             valor += minutos * tarifa.getValorMinuto();
                         }
                     }

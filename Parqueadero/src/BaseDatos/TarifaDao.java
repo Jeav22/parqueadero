@@ -7,10 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Time;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import modelo.Tarifa;
@@ -32,6 +30,7 @@ public class TarifaDao implements IBaseDatos<Tarifa>{
             Time horaExpira = null;
             int valorMinuto = 0;
             LocalDate ldt;
+            String tipo = null;
 
             while (rs.next()) {
                 if (tarifas == null) {
@@ -58,6 +57,9 @@ public class TarifaDao implements IBaseDatos<Tarifa>{
 
                 valorMinuto = rs.getInt("valorMinuto");
                 registro.setValorMinuto(valorMinuto);
+                
+                tipo = rs.getString("tipo");
+                registro.setTipoTarifa(tipo);
 
                 tarifas.add(registro);
             }
@@ -75,7 +77,7 @@ public class TarifaDao implements IBaseDatos<Tarifa>{
     public boolean insert(Tarifa t) {
         boolean result = false;
         Connection connection = Conexion.getConnection();
-        String query = " insert into Tarifa (valorMinuto, fechaInicio, horaInicio, fechaExpira, horaExpira)" + " values (?, ?, ?, ?, ?)";
+        String query = " insert into Tarifa (valorMinuto, fechaInicio, horaInicio, fechaExpira, horaExpira, tipo)" + " values (?, ?, ?, ?, ?, ?)";
         PreparedStatement preparedStmt = null;
 
         try {
@@ -85,6 +87,7 @@ public class TarifaDao implements IBaseDatos<Tarifa>{
             preparedStmt.setTime(3, Time.valueOf(t.getHoraInicio()));
             preparedStmt.setDate(4, Date.valueOf(t.getFechaExpira()));
             preparedStmt.setTime(5, Time.valueOf(t.getHoraExpira()));
+            preparedStmt.setString(6, t.getTipoTarifa());
             result = preparedStmt.execute();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -96,7 +99,7 @@ public class TarifaDao implements IBaseDatos<Tarifa>{
     public boolean update(Tarifa t) {
         boolean result = false;
         Connection connection = Conexion.getConnection();
-        String query = "update Tarifa set valorMinuto = ?, fechaInicio = ?, horaInico = ?, fechaExpira=?, horaExpira = ? where id = ?";
+        String query = "update Tarifa set valorMinuto = ?, fechaInicio = ?, horaInico = ?, fechaExpira=?, horaExpira = ?, tipo = ? where id = ?";
         PreparedStatement preparedStmt = null;
         try {
             preparedStmt = connection.prepareStatement(query);
@@ -105,7 +108,8 @@ public class TarifaDao implements IBaseDatos<Tarifa>{
             preparedStmt.setTime(3, Time.valueOf(t.getHoraInicio()));
             preparedStmt.setDate(4, Date.valueOf(t.getFechaExpira()));
             preparedStmt.setTime(5, Time.valueOf(t.getHoraExpira()));
-            preparedStmt.setInt(6, t.getIdTarifa());
+            preparedStmt.setString(6, t.getTipoTarifa());
+            preparedStmt.setInt(7, t.getIdTarifa());
             if (preparedStmt.executeUpdate() > 0) {
                 result = true;
             }

@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS Tarifa(
 	fechaExpira date not null,
 	horaExpira time not null, 
 	valorMinuto double not null,
+	tipo varchar(15)not null,
 
 	PRIMARY KEY(id)
 );
@@ -50,8 +51,8 @@ CREATE TABLE IF NOT EXISTS Servicio(
 	FOREIGN KEY(ubicacion) REFERENCES LugarParqueo(id)
 );
 
-INSERT INTO Tarifa(fechaInicio,horaInicio, fechaExpira, horaExpira,valorMinuto) VALUES ('2017-01-01','00:00:00', '2017-12-31','22:04:30', 60);
-
+INSERT INTO Tarifa(fechaInicio,horaInicio, fechaExpira, horaExpira,valorMinuto,tipo) VALUES (now()- interval 2 day,now()- interval  5 hour, now(),now()- interval 5 minute, 60,'Promo');
+INSERT INTO Tarifa(fechaInicio,horaInicio, fechaExpira, horaExpira,valorMinuto,tipo) VALUES (now(),now()- interval 5 minute + interval 1 second, now()+ interval 2 day,now()+ interval 1 hour, 75,'General');
 # estados = 3 (1= disponible, 2=ocupado, 3=fueraDeServicio)
 
 INSERT INTO LugarParqueo(tipo, estado) VALUES ('General',1);
@@ -78,7 +79,7 @@ INSERT INTO LugarParqueo(tipo, estado) VALUES ('General',1);
 
 INSERT INTO Vehiculo(placa) VALUES('QYZ036');
 
-INSERT INTO Servicio(fechaIngreso, horaIngreso, placa, ubicacion, idPropietario) VALUES (now(), now(),'QYZ036',3,-1);
+INSERT INTO Servicio(fechaIngreso, horaIngreso, placa, ubicacion, idPropietario) VALUES (now(), now()- interval 22 minute,'QYZ036',3,-1);
 
 INSERT INTO Propietario(nombre, correo) VALUES ('Pepito Perez','pepito@perez.com');
 

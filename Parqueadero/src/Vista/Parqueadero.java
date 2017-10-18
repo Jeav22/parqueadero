@@ -158,7 +158,7 @@ public class Parqueadero {
                     valorMinuto = sc.nextInt();
                     System.out.print("\nIngrese el tipo de tarifa a crear: ");
                     descripcion = sc.next();
-                    transaccion = crearTarifa(fecha, hora2, fecha, hora, opcion, correo);
+                    transaccion = crearTarifa(fecha, hora, fecha2, hora2, valorMinuto, descripcion);
                     if (transaccion) {
                         System.out.println("La tarifa se registro exitosamente!\n");
                     } else {
