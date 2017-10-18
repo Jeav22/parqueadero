@@ -17,10 +17,9 @@ public class AdministradorVehiculo {
         this.mPropietario = propietario;
     }
 
-    public boolean registrarVehiculo(String placa, String descripcion) {
+    public boolean registrarVehiculo(String placa) {
         Vehiculo v = new Vehiculo();
         v.setPlaca(placa);
-        v.setDescripcion(descripcion);
         return mVehiculo.insert(v);
     }
 
@@ -29,10 +28,9 @@ public class AdministradorVehiculo {
         List<String> vehiculos = new ArrayList<>();
         
         for (Vehiculo listaVehiculo : listaVehiculos) {
-            String v ="Placa: " + listaVehiculo.getPlaca() + " Descripcion: " + listaVehiculo.getDescripcion()+"\n";
+            String v ="Placa: " + listaVehiculo.getPlaca().toUpperCase() + "\n";
             vehiculos.add(v);
         }
-                
         return vehiculos;
     }
 
@@ -44,7 +42,7 @@ public class AdministradorVehiculo {
         String servicios = "";
         for (Vehiculo listaVehiculo : listaVehiculos) {
             if (listaVehiculo.getPlaca().equalsIgnoreCase(placa)) {
-                vehiculo = "Placa: " + listaVehiculo.getPlaca() + " Descripcion: " + listaVehiculo.getDescripcion()+"\n\n";
+                vehiculo = "Placa: " + listaVehiculo.getPlaca().toUpperCase() +"\n\n";
 
                 for (Servicio listaServicio : listaServicios) {
                     if (listaServicio.getPlaca().equalsIgnoreCase(placa)) {
@@ -62,7 +60,7 @@ public class AdministradorVehiculo {
                                 
                             }
                         }
-                        servicios += "Servicio: "+listaServicio.getIdServicio()+" Valor: "+listaServicio.getValorServicio()+" Ingreso: "+listaServicio.getFechaIngreso()+" "+listaServicio.getHoraIngreso()+" Salida: "+listaServicio.getFechaSalida()+" "+listaServicio.getHoraSalida()+" Ubicacion: "+listaServicio.getUbicacion()+" Propietario: "+dueño+"\n";
+                        servicios += "Servicio: "+listaServicio.getIdServicio()+" Valor: $"+listaServicio.getValorServicio()+" Ingreso: "+listaServicio.getFechaIngreso()+" "+listaServicio.getHoraIngreso()+" Salida: "+listaServicio.getFechaSalida()+" "+listaServicio.getHoraSalida()+" Ubicacion: "+listaServicio.getUbicacion()+" Propietario: "+dueño+"\n";
                     }
                 }
                 return vehiculo+servicios;

@@ -35,7 +35,7 @@ public class AdministradorPropietario {
     
     public String obtenerDatosPropietario(String correo){
         String propietario = null;
-        String servicio = null;
+        String servicio = "";
         List<Propietario> listaPropietarios = mPropietario.findAll();
         List<Servicio> listaServicios = mServicio.findAll();
         
@@ -45,7 +45,7 @@ public class AdministradorPropietario {
                     propietario = "Id: "+listaPropietario.getId()+" Nombre: "+listaPropietario.getNombre()+" Correo: "+listaPropietario.getCorreo()+"\n\n";
                     for (Servicio listaServicio : listaServicios) {
                         if (listaServicio.getIdPropietario() == listaPropietario.getId()) {
-                            servicio += "Servicio: "+listaServicio.getIdServicio()+" Valor: "+listaServicio.getValorServicio()+" Ingreso: "+listaServicio.getFechaIngreso()+" Salida: "+listaServicio.getFechaSalida()+" Ubicacion: "+listaServicio.getUbicacion()+" Propietario: "+listaPropietario.getNombre()+"\n";
+                            servicio += "Servicio: "+listaServicio.getIdServicio()+" Placa :"+listaServicio.getPlaca()+" Valor: "+listaServicio.getValorServicio()+" Ingreso: "+listaServicio.getFechaIngreso()+" "+listaServicio.getHoraIngreso()+" Salida: "+listaServicio.getFechaSalida()+" "+listaServicio.getHoraSalida()+" Ubicacion: "+listaServicio.getUbicacion()+" Propietario: "+listaPropietario.getNombre()+"\n";
                         }
                     }
                     return propietario+servicio;

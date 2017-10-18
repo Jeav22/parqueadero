@@ -12,8 +12,8 @@ public class ControladorVehiculo {
         adminVehiculo = new AdministradorVehiculo(mVehiculo, mServicio, mPropietario);
     }
     
-    public boolean registrarVehiculo(String placa, String descripcion){
-        return adminVehiculo.registrarVehiculo(placa, descripcion);
+    public boolean registrarVehiculo(String placa){
+        return adminVehiculo.registrarVehiculo(placa);
     }
     
     public List<String> listarVehiculos(){

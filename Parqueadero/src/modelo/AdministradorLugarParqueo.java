@@ -16,10 +16,8 @@ public class AdministradorLugarParqueo {
         List<LugarParqueo> listaLugarParqueos = mLugarParqueo.findAll();
         for (int i = 0; i < listaLugarParqueos.size(); i++) {
             LugarParqueo listaLugarParqueo = listaLugarParqueos.get(i);
-            System.out.println(listaLugarParqueo.getTipoLugarParqueo());
             if (listaLugarParqueo.getIdLugarParqueo() == idLugarParqueo) {
                 listaLugarParqueo.setEstadoLugarParqueo(estado);
-                System.out.println("estado "+listaLugarParqueo.getEstadoLugarParqueo());
                 return mLugarParqueo.update(listaLugarParqueo);
             }
         }

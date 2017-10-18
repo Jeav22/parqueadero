@@ -20,7 +20,6 @@ public class VehiculoDao implements IBaseDatos<Vehiculo> {
             Statement st = connection.createStatement();
             ResultSet rs = st.executeQuery(query);
             String placa = null;
-            String descripcion = null;
 
             while (rs.next()) {
                 if (vehiculos == null) {
@@ -31,8 +30,6 @@ public class VehiculoDao implements IBaseDatos<Vehiculo> {
                 placa = rs.getString("placa");
                 registro.setPlaca(placa);
 
-                descripcion = rs.getString("descripcion");
-                registro.setDescripcion(descripcion);
                 vehiculos.add(registro);
             }
             st.close();
@@ -47,12 +44,11 @@ public class VehiculoDao implements IBaseDatos<Vehiculo> {
     public boolean insert(Vehiculo t) {
         boolean result = false;
         Connection connection = Conexion.getConnection();
-        String query = " insert into Vehiculo (placa, descripcion)" + " values (?, ?)";
+        String query = " insert into Vehiculo (placa)" + " values (?)";
         PreparedStatement preparedStmt = null;
         try {
             preparedStmt = connection.prepareStatement(query);
             preparedStmt.setString(1, t.getPlaca());
-            preparedStmt.setString(2, t.getDescripcion());
             result = preparedStmt.execute();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -64,13 +60,12 @@ public class VehiculoDao implements IBaseDatos<Vehiculo> {
     public boolean update(Vehiculo t) {
         boolean result = false;
         Connection connection = Conexion.getConnection();
-        String query = "update Vehiculo set placa = ?, descripcion = ? where id = ?";
+        String query = "update Vehiculo set placa = ? where id = ?";
         PreparedStatement preparedStmt = null;
         try {
             preparedStmt = connection.prepareStatement(query);
             preparedStmt.setString(1, t.getPlaca());
-            preparedStmt.setString(2, t.getDescripcion());
-            preparedStmt.setInt(3, t.getId());
+            preparedStmt.setInt(2, t.getId());
             if (preparedStmt.executeUpdate() > 0) {
                 result = true;
             }

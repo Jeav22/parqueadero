@@ -52,7 +52,7 @@ public class Parqueadero {
             Scanner sc = new Scanner(System.in);
             opcion = sc.nextInt();
             System.out.println("");
-            
+
             String placa = null;
             String descripcion = null;
             String nombre = null;
@@ -72,78 +72,87 @@ public class Parqueadero {
             LocalTime hora2 = null;
 
             switch (opcion) {
-                
+
                 case 1:
                     System.out.print("Ingrese la placa del Vehiculo: ");
-                    placa = sc.next();
-                    System.out.print("\nIngrese una descripcion del vehiculo: ");
-                    descripcion = sc.next();
+                    sc.nextLine();
+                    placa = sc.nextLine();
                     System.out.print("\nIngrese el lugar de parqueo del vehiculo: ");
                     ubicacion = sc.nextInt();
-                    transaccion = ingresarVehiculo(ubicacion, placa, descripcion);
+                    transaccion = ingresarVehiculo(ubicacion, placa.toUpperCase());
                     if (transaccion) {
                         System.out.println("\nEl vehiculo se registro exitosamente!\n");
-                    }else{
+                    } else {
                         System.out.println("\nNo se pudo registrar el vehiculo\n");
                     }
                     System.out.println(".-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.");
                     break;
-                
+
                 case 2:
                     System.out.print("Ingrese la placa del Vehiculo a retirar: ");
-                    placa = sc.next();
+                    sc.nextLine();
+                    placa = sc.nextLine();
                     System.out.print("\nDesea agregar datos de propietario (si=Y, no=N): ");
-                    subMenu = sc.next();
+                    subMenu = sc.nextLine();
                     if (subMenu.equalsIgnoreCase("y")) {
-                        System.out.print("\nDigite el nombre del propietario: ");
-                        nombre = sc.next();
                         System.out.print("\nDigite un correo electronico: ");
-                        correo = sc.next();
-                        transaccion = registrarPropietario(nombre, correo);
-                        if (!transaccion) {
-                            System.out.println("El Propietario se registro exitosamente!\n");
+                        correo = sc.nextLine();
+                        if(buscarPropietario(correo).contains("No se encuentra")){
+                            System.out.print("\nDigite el nombre del propietario: ");
+                            nombre = sc.nextLine();
+                            transaccion = registrarPropietario(nombre, correo);
+                            if (!transaccion) {
+                                System.out.println("El Propietario se registro exitosamente!\n");
+                            } else {
+                                System.out.println("No se pudo registrar el propietario\n");
+                            }
                         }else{
-                            System.out.println("No se pudo registrar el propietario\n");
+                            System.out.println("Usuario previamente registrado!");
                         }
                     }
-                    System.out.println("Valor servicio a cancelar: $"+retirarVehiculo(placa, correo));
+                    double v = retirarVehiculo(placa.toUpperCase(), correo);
+                    if (v > 0) {
+                        System.out.println("Valor servicio a cancelar: $" + v);
+                    } else {
+                        System.out.println("No existe servicio actualmente para " + placa);
+                    }
                     System.out.println(".-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.");
                     break;
-                
+
                 case 3:
                     System.out.print("Ingrese la placa del Vehiculo a buscar: ");
                     placa = sc.next();
-                    System.out.println("\n"+obtenerRegistrosVehiculo(placa));
+                    System.out.println("\n" + obtenerRegistrosVehiculo(placa.toUpperCase()));
                     System.out.println(".-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.");
                     break;
-                
+
                 case 4:
                     System.out.print("\nDigite un correo electronico: ");
                     correo = sc.next();
-                    System.out.println("\n"+obtenerRegistrosPropietario(correo));
+                    System.out.println("\n" + obtenerRegistrosPropietario(correo));
                     System.out.println(".-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.");
                     break;
-                
+
                 case 5:
-                    System.out.print("Ingrese una Fecha: p.e("+LocalDate.now()+", yyyy-MM-dd) ");
+                    System.out.print("Ingrese una Fecha: p.e(" + LocalDate.now() + ", yyyy-MM-dd) ");
                     sfecha = sc.next();
                     LocalDate ld = LocalDate.parse(sfecha);
-                    System.out.println("\n"+obtenerRegistrosFecha(ld));
+                    System.out.println("\n" + obtenerRegistrosFecha(ld));
                     System.out.println(".-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.");
                     break;
-                
+
                 case 6:
                     System.out.print("Ingrese una fecha de inicio para la tarifa p.e (yyyy-MM-dd) ");
-                    sfecha= sc.next();
+                    sfecha = sc.next();
                     fecha = LocalDate.parse(sfecha);
                     System.out.print("Ingrese una hora de inicio para la tarifa p.e (HH:mm:ss) ");
-                    shora= sc.next();
+                    shora = sc.next();
                     hora = LocalTime.parse(shora);
                     System.out.print("\nIngrese una fecha de expiracion para la tarifa p.e (yyyy-MM-dd)");
-                    sfecha2= sc.next();
+                    sfecha2 = sc.next();
                     fecha2 = LocalDate.parse(sfecha2);
                     System.out.print("Ingrese una hora de expiracion para la tarifa p.e (HH:mm:ss) ");
-                    shora2= sc.next();
+                    shora2 = sc.next();
                     hora2 = LocalTime.parse(shora2);
                     System.out.print("\nDigite el valor por minuto de la tarifa: $");
                     valorMinuto = sc.nextInt();
@@ -152,7 +161,7 @@ public class Parqueadero {
                     transaccion = crearTarifa(fecha, hora2, fecha, hora, opcion, correo);
                     if (transaccion) {
                         System.out.println("La tarifa se registro exitosamente!\n");
-                    }else{
+                    } else {
                         System.out.println("No se pudo registrar la tarifa\n");
                     }
                     System.out.println(".-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.");
@@ -166,16 +175,25 @@ public class Parqueadero {
         } while (opcion != 7);
     }
 
-    public static boolean ingresarVehiculo(int idLugarParqueo, String placa, String descripcion) {       
+    public static boolean ingresarVehiculo(int idLugarParqueo, String placa) {
         boolean transaccion;
-        boolean servicio=ctrServicio.CrearServicio(LocalDate.now(), LocalTime.now(), placa, idLugarParqueo);
-        boolean estadoLP =ctrLugarParqueo.actualizarEstadoLugarParqueo(idLugarParqueo, 2);
-        boolean registroV = ctrVehiculo.registrarVehiculo(placa, descripcion);
-        if (servicio && estadoLP && registroV) {
+        int elp = ctrLugarParqueo.consultarEstadoLugarParqueo(idLugarParqueo);
+        if (elp == 1) {
+            boolean servicio = ctrServicio.CrearServicio(LocalDate.now(), LocalTime.now(), placa, idLugarParqueo);
+            boolean estadoLP = ctrLugarParqueo.actualizarEstadoLugarParqueo(idLugarParqueo, 2);
+            boolean registroV = ctrVehiculo.registrarVehiculo(placa);
+            if (servicio && estadoLP && registroV) {
+                transaccion = false;
+            } else {
+                transaccion = true;
+            }
+        } else {
+            if (elp == 2) {
+                System.out.println("El lugar de parqueo se encuentra ocupado");
+            }else{
+                System.out.println("El lugar de parqueo se encuentra fuera de servicio");
+            }
             transaccion = false;
-        }else{
-            System.out.println("servicio "+servicio+" estadoLugarParqueo "+estadoLP+" registroVehiculo "+registroV);
-            transaccion = true;
         }
         return transaccion;
     }
@@ -190,6 +208,10 @@ public class Parqueadero {
 
     public static String buscarLugarParqueo(String placa) {
         return ctrServicio.obtenerLugarParqueo(placa);
+    }
+    
+    private static String buscarPropietario(String correo) {
+        return ctrPropietario.obtenerDatosPropietario(correo);
     }
 
     public static String obtenerRegistrosPropietario(String correo) {

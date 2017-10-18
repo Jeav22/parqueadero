@@ -15,7 +15,6 @@ CREATE TABLE IF NOT EXISTS Tarifa(
 CREATE TABLE IF NOT EXISTS Vehiculo(
 	id integer auto_increment not null,
 	placa varchar(6) not null,
-	descripcion varchar(20),
 	
 	PRIMARY KEY(id)
 );
@@ -23,7 +22,7 @@ CREATE TABLE IF NOT EXISTS Vehiculo(
 CREATE TABLE IF NOT EXISTS Propietario(
 	id integer auto_increment not null,
 	nombre varchar(30) not null,
-	correo varchar(30) not null,
+	correo varchar(40) not null,
 
 	PRIMARY KEY(id)
 );
@@ -77,9 +76,9 @@ INSERT INTO LugarParqueo(tipo, estado) VALUES ('General',1);
 INSERT INTO LugarParqueo(tipo, estado) VALUES ('Discapacitados',1);
 INSERT INTO LugarParqueo(tipo, estado) VALUES ('General',1);
 
-INSERT INTO Vehiculo(placa, descripcion) VALUES('QYZ036', 'Ford Fusion');
+INSERT INTO Vehiculo(placa) VALUES('QYZ036');
 
-INSERT INTO Servicio(fechaIngreso, placa, ubicacion, idPropietario) VALUES (now(),'QYZ036',3,-1);
+INSERT INTO Servicio(fechaIngreso, horaIngreso, placa, ubicacion, idPropietario) VALUES (now(), now(),'QYZ036',3,-1);
 
 INSERT INTO Propietario(nombre, correo) VALUES ('Pepito Perez','pepito@perez.com');
 

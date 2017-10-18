@@ -39,28 +39,20 @@ public class AdministradorServicio {
         double valor = 0;
         try {
             for (Servicio servicio : servicios) {
-                if (servicio.getPlaca().equalsIgnoreCase(placa) && servicio.getFechaSalida()== null) {
-                    int minutos=0;
+                if (servicio.getPlaca().equalsIgnoreCase(placa) && servicio.getFechaSalida() == null) {
+                    int minutos = 0;
                     servicio.setFechaSalida(fechaSalida);
                     servicio.setHoraSalida(horaSalida);
-                    servicio.setValorServicio(valor);
 
                     for (Tarifa tarifa : tarifas) {
                         if (servicio.getFechaIngreso().isAfter(tarifa.getFechaInicio()) && fechaSalida.isBefore(tarifa.getFechaExpira())) {
-                            minutos = (horaSalida.getHour()-servicio.getHoraIngreso().getHour())*60 + horaSalida.getMinute()-servicio.getHoraIngreso().getMinute();
-                            System.out.println("Minutos "+minutos);
-                            valor += minutos*tarifa.getValorMinuto();
+                            minutos = (horaSalida.getHour() - servicio.getHoraIngreso().getHour()) * 60 + horaSalida.getMinute() - servicio.getHoraIngreso().getMinute();
+                            System.out.println("Minutos " + minutos);
+                            valor += minutos * tarifa.getValorMinuto();
                         }
                     }
+                    servicio.setValorServicio(valor);
 
-                    mServicio.update(servicio);
-
-                    for (LugarParqueo ubicacion : ubicaciones) {
-                        if (ubicacion.getIdLugarParqueo() == servicio.getUbicacion()) {
-                            ubicacion.setEstadoLugarParqueo(1);
-                            mLugarParqueo.update(ubicacion);
-                        }
-                    }
                     if (correo.equals("Anonimo")) {
                         servicio.setIdPropietario(-1);
                     } else {
@@ -68,6 +60,15 @@ public class AdministradorServicio {
                             if (correo.equalsIgnoreCase(propietario.getCorreo())) {
                                 servicio.setIdPropietario(propietario.getId());
                             }
+                        }
+                    }
+
+                    mServicio.update(servicio);
+                    
+                    for (LugarParqueo ubicacion : ubicaciones) {
+                        if (ubicacion.getIdLugarParqueo() == servicio.getUbicacion()) {
+                            ubicacion.setEstadoLugarParqueo(1);
+                            mLugarParqueo.update(ubicacion);
                         }
                     }
                 }
@@ -95,7 +96,7 @@ public class AdministradorServicio {
                             }
                         }
                     }
-                    String s = "Servicio: " + listaServicio.getIdServicio() + " Placa: " + listaServicio.getPlaca() + " Valor: " + listaServicio.getValorServicio() + " Ingreso: " + listaServicio.getFechaIngreso()+" "+listaServicio.getHoraIngreso()+" Salida: " + listaServicio.getFechaSalida()+" "+listaServicio.getHoraSalida()+" Ubicacion: " + listaServicio.getUbicacion() + " Propietario: " + dueño + "\n";
+                    String s = "Servicio: " + listaServicio.getIdServicio() + " Placa: " + listaServicio.getPlaca() + " Valor: $" + listaServicio.getValorServicio() + " Ingreso: " + listaServicio.getFechaIngreso() + " " + listaServicio.getHoraIngreso() + " Salida: " + listaServicio.getFechaSalida() + " " + listaServicio.getHoraSalida() + " Ubicacion: " + listaServicio.getUbicacion() + " Propietario: " + dueño + "\n";
                     servicios.add(s);
                 }
             }
