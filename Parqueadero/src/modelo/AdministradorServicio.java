@@ -63,14 +63,14 @@ public class AdministradorServicio {
                         }
                     }
 
-                    mServicio.update(servicio);
-                    
                     for (LugarParqueo ubicacion : ubicaciones) {
                         if (ubicacion.getIdLugarParqueo() == servicio.getUbicacion()) {
                             ubicacion.setEstadoLugarParqueo(1);
                             mLugarParqueo.update(ubicacion);
                         }
                     }
+                    
+                    mServicio.update(servicio);
                 }
             }
         } catch (Exception e) {

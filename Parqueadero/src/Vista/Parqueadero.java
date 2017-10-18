@@ -56,7 +56,7 @@ public class Parqueadero {
             String placa = null;
             String descripcion = null;
             String nombre = null;
-            String correo = null;
+            String correo = "Anonimo";
             String subMenu = null;
             String sfecha = null;
             String sfecha2 = null;
